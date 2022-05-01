@@ -1,8 +1,11 @@
 {
-  "name": "babel-plugin-import-graphql",
+  "name": "@anders-nom/babel-plugin-import-graphql-string",
   "version": "2.8.1",
   "description": "Babel plugin to make .gql/.graphql files importable",
   "author": "A.J. Roberts <detrohutt@gmail.com>",
+  "contributors": [
+    "A.B. Nomerstad <anders@nomerstad.com>"
+  ],
   "license": "MIT",
   "main": "build/index.js",
   "files": [
@@ -17,16 +20,11 @@
     "import",
     "inline"
   ],
-  "repository": "detrohutt/babel-plugin-import-graphql",
+  "repository": "anders-nom/babel-plugin-import-graphql-string",
   "scripts": {
     "lint": "eslint plugin",
     "test": "jest",
     "prepare": "babel plugin --out-dir build"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
   },
   "dependencies": {
     "graphql-tag": "^2.9.2"
