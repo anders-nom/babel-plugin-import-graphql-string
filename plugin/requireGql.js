@@ -10,13 +10,13 @@ export const defaultResolve = (src, file) => path.resolve(dirname(file), src)
 
 export const requireGql = (
   filepath,
-  { resolve = defaultResolve, nowrap = true, emitDeclarations = false } = {}
+  { resolve = defaultResolve, nowrap = true, emitDeclarations = false, sourceOnly = false } = {}
 ) => {
   filepath = isAbsolute(filepath) ? filepath : join(callerDirname(), filepath)
   const source = readFileSync(filepath).toString()
 
-  // If the file doesn't contain ops return raw text, else parse and return docsMap object.
-  if (isSchemaLike(source)) {
+  // If the file doesn't contain ops return raw text, else parse and return docsMap object (unless the sourceOnly option is set)
+  if (sourceOnly || isSchemaLike(source)) {
     const imports = customImport.getFilepaths(source, filepath, resolve)
 
     if (imports.length === 0) return source
