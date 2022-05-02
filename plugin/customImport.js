@@ -27,7 +27,7 @@ function _getSources(filepath, resolve, acc) {
   const srcs =
     nestedPaths.length > 0
       ? [
-        ...nestedPaths.reduce((srcArr, fp) => [...srcArr, ...getSources(fp, resolve, [])], []),
+        ...nestedPaths.reduce((srcArr, fp) => [...srcArr, ..._getSources(fp, resolve, [])], []),
         srcAndPath
       ]
       : [srcAndPath]
@@ -38,5 +38,5 @@ export function getSources(filepath, resolve, acc = []) {
   return _getSources(filepath, resolve, acc)
     .filter((srcAndPath, index, array) => array
       .findIndex(item => item.path === srcAndPath.path) === index)
-    .map(srcAndPath => srcAndPath.src);
+    .map(srcAndPath => srcAndPath.src)
 }
