@@ -1,6 +1,6 @@
 {
   "name": "@anders-nom/babel-plugin-import-graphql-string",
-  "version": "2.8.1-8",
+  "version": "2.8.1-9",
   "description": "Babel plugin to make .gql/.graphql files importable",
   "author": "A.J. Roberts <detrohutt@gmail.com>",
   "contributors": [
