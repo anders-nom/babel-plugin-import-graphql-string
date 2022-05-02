@@ -16,17 +16,27 @@ export function getFilepaths(src, relFile, resolve) {
   )
 }
 
-export function getSources(filepath, resolve, acc = [], previouslyImported = []) {
-  const importSrc = readFileSync(filepath.replace(/'/g, '')).toString()
+function _getSources(filepath, resolve, acc) {
+  const path = filepath.replace(/'/g, '')
+
+  const importSrc = readFileSync(path).toString()
   const nestedPaths = getFilepaths(importSrc, filepath, resolve)
-    .filter(path => !previouslyImported.some(prevPath => path === prevPath))
+
+  const srcAndPath = { src: importSrc, path }
 
   const srcs =
     nestedPaths.length > 0
       ? [
-        ...nestedPaths.reduce((srcArr, fp) => [...srcArr, ...getSources(fp, resolve, [], [...nestedPaths, ...previouslyImported])], []),
-        importSrc
+        ...nestedPaths.reduce((srcArr, fp) => [...srcArr, ...getSources(fp, resolve, [])], []),
+        srcAndPath
       ]
-      : [importSrc]
+      : [srcAndPath]
   return [...srcs, ...acc]
+}
+
+export function getSources(filepath, resolve, acc = []) {
+  return _getSources(filepath, resolve, acc)
+    .filter((srcAndPath, index, array) => array
+      .findIndex(item => item.path === srcAndPath.path) === index)
+    .map(srcAndPath => srcAndPath.src);
 }

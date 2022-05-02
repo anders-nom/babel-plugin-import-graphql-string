@@ -24,7 +24,7 @@ export const requireGql = (
     // Resolve all #import statements (types, etc) recursively and concat them to the main source.
     return (
       imports
-        .reduce((acc, fp) => [...acc, ...customImport.getSources(fp, resolve, [], imports)], [])
+        .reduce((acc, fp) => [...acc, ...customImport.getSources(fp, resolve, [])], [])
         .map(stripImportStatements)
         .join('') + stripImportStatements(source)
     )
