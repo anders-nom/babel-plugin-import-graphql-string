@@ -58,7 +58,7 @@ export default ({ types: t, template }) => ({
             const replacements = buildReplacements(result, importNames, opts, seenJSFiles)
             replacements.length > 1
               ? curPath.replaceWithMultiple(replacements)
-              : curPath.replaceWith(replacements[0])
+              : curPath.replaceWith(sourceOnly ? print(replacements[0]) : replacements[0])
           }
         }
 
@@ -126,12 +126,7 @@ export default ({ types: t, template }) => ({
           const buildNode = template('var IMPORT_NAME = AST;', { sourceType: 'module' })
           const astNode = t.valueToNode(JSON.parse(JSON.stringify(graphqlAST)))
           astNode._compact = true
-          const node = buildNode({ IMPORT_NAME: t.identifier(importName), AST: astNode })
-
-          // eslint-disable-next-line no-console
-          console.log(JSON.stringify(node))
-
-          return sourceOnly ? print(node) : node
+          return buildNode({ IMPORT_NAME: t.identifier(importName), AST: astNode })
         }
       }
     }
