@@ -19,11 +19,15 @@ export const requireGql = (
   if (sourceOnly || isSchemaLike(source)) {
     const imports = customImport.getFilepaths(source, filepath, resolve)
 
+    // eslint-disable-next-line no-console
+    console.log(`Import paths: ${JSON.stringify(imports)}`)
+
     if (imports.length === 0) return source
 
     // Resolve all #import statements (types, etc) recursively and concat them to the main source.
     return (
       imports
+        .filter((path, index, array) => array.indexOf(path) === index)
         .reduce((acc, fp) => [...acc, ...customImport.getSources(fp, resolve, [])], [])
         .map(stripImportStatements)
         .join('') + stripImportStatements(source)
