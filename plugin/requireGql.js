@@ -1,6 +1,7 @@
 import { readFileSync, writeFileSync } from 'fs'
 import path, { isAbsolute, join, dirname } from 'path'
 import gql from 'graphql-tag'
+import { print } from 'graphql/language'
 
 import { createDocPerOp } from './multiOp'
 import { newlinePattern, importPattern } from './constants'
@@ -16,18 +17,14 @@ export const requireGql = (
   const source = readFileSync(filepath).toString()
 
   // If the file doesn't contain ops return raw text, else parse and return docsMap object (unless the sourceOnly option is set)
-  if (sourceOnly || isSchemaLike(source)) {
+  if (isSchemaLike(source)) {
     const imports = customImport.getFilepaths(source, filepath, resolve)
-
-    // eslint-disable-next-line no-console
-    console.log(`Import paths: ${JSON.stringify(imports)}`)
 
     if (imports.length === 0) return source
 
     // Resolve all #import statements (types, etc) recursively and concat them to the main source.
     return (
       imports
-        .filter((path, index, array) => array.indexOf(path) === index)
         .reduce((acc, fp) => [...acc, ...customImport.getSources(fp, resolve, [])], [])
         .map(stripImportStatements)
         .join('') + stripImportStatements(source)
@@ -41,7 +38,11 @@ export const requireGql = (
     writeDTs(filepath, docsMap)
   }
 
-  return nowrap && !doc.isMultiOp ? docsMap.default : docsMap
+  return nowrap && !doc.isMultiOp
+    ? sourceOnly
+      ? print(docsMap.default)
+      : docsMap.default
+    : docsMap
 }
 
 function writeDTs(filepath, docsMap) {
