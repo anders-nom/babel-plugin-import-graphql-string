@@ -126,7 +126,12 @@ export default ({ types: t, template }) => ({
           const buildNode = template('var IMPORT_NAME = AST;', { sourceType: 'module' })
           const astNode = t.valueToNode(JSON.parse(JSON.stringify(graphqlAST)))
           astNode._compact = true
-          return buildNode({ IMPORT_NAME: t.identifier(importName), AST: astNode })
+          const node = buildNode({ IMPORT_NAME: t.identifier(importName), AST: astNode })
+
+          // eslint-disable-next-line no-console
+          console.log(JSON.stringify(node))
+
+          return sourceOnly ? print(node) : node
         }
       }
     }

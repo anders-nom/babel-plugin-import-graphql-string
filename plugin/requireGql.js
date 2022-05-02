@@ -40,7 +40,7 @@ export const requireGql = (
 
   const docFinal = nowrap && !doc.isMultiOp ? docsMap.default : docsMap
 
-  return sourceOnly ? print(docFinal) : docFinal
+  return docFinal
 }
 
 function writeDTs(filepath, docsMap) {
