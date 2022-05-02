@@ -16,9 +16,11 @@ export function getFilepaths(src, relFile, resolve) {
   )
 }
 
-export function getSources(filepath, resolve, acc = []) {
+export function getSources(filepath, resolve, acc = [], previouslyImported = []) {
   const importSrc = readFileSync(filepath.replace(/'/g, '')).toString()
   const nestedPaths = getFilepaths(importSrc, filepath, resolve)
+    .filter(path => !previouslyImported.some(prevPath => path === prevPath))
+
   const srcs =
     nestedPaths.length > 0
       ? [

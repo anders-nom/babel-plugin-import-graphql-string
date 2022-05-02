@@ -17,7 +17,7 @@ export const requireGql = (
   const source = readFileSync(filepath).toString()
 
   // If the file doesn't contain ops return raw text, else parse and return docsMap object (unless the sourceOnly option is set)
-  if (isSchemaLike(source)) {
+  if (sourceOnly || isSchemaLike(source)) {
     const imports = customImport.getFilepaths(source, filepath, resolve)
 
     if (imports.length === 0) return source
@@ -25,7 +25,7 @@ export const requireGql = (
     // Resolve all #import statements (types, etc) recursively and concat them to the main source.
     return (
       imports
-        .reduce((acc, fp) => [...acc, ...customImport.getSources(fp, resolve, [])], [])
+        .reduce((acc, fp) => [...acc, ...customImport.getSources(fp, resolve, [], imports)], [])
         .map(stripImportStatements)
         .join('') + stripImportStatements(source)
     )
@@ -38,9 +38,7 @@ export const requireGql = (
     writeDTs(filepath, docsMap)
   }
 
-  const docFinal = nowrap && !doc.isMultiOp ? docsMap.default : docsMap
-
-  return docFinal
+  return nowrap && !doc.isMultiOp ? docsMap.default : docsMap
 }
 
 function writeDTs(filepath, docsMap) {
