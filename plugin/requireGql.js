@@ -1,7 +1,6 @@
 import { readFileSync, writeFileSync } from 'fs'
 import path, { isAbsolute, join, dirname } from 'path'
 import gql from 'graphql-tag'
-import { print } from 'graphql/language'
 
 import { createDocPerOp } from './multiOp'
 import { newlinePattern, importPattern } from './constants'

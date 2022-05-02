@@ -56,13 +56,9 @@ export default ({ types: t, template }) => ({
             curPath.replaceWith(buildSrcVarNode(result, importNames[0].local.name))
           } else {
             const replacements = buildReplacements(result, importNames, opts, seenJSFiles)
-
-            // eslint-disable-next-line no-console
-            console.log(JSON.stringify(replacements))
-
             replacements.length > 1
               ? curPath.replaceWithMultiple(replacements)
-              : curPath.replaceWith(sourceOnly ? print(replacements[0]) : replacements[0])
+              : curPath.replaceWith(replacements[0])
           }
         }
 
